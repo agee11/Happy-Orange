@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "204063853617",
+    "firebase_url": "https://happy-orange.firebaseio.com",
+    "project_id": "happy-orange",
+    "storage_bucket": "happy-orange.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:204063853617:android:e04c605e02a90d97",
+        "android_client_info": {
+          "package_name": "com.example.proto.prototype_orange"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "204063853617-5uesqtok3tntgg1i1j2qbn23sre97orh.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDL1LWAZnxU8jjUVNc8eziVjmRLjsrmg1w"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

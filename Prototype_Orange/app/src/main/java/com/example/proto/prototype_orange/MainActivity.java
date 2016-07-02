@@ -10,13 +10,15 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.example.proto.prototype_orange.Dish;
-
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Random;
 import android.view.GestureDetector;
 import android.widget.Toast;
+
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 public class MainActivity extends AppCompatActivity{
 
@@ -31,6 +33,8 @@ public class MainActivity extends AppCompatActivity{
     Dish eggroll;
     private GestureDetector gestureDetector;
     float xOffset;
+    FirebaseDatabase database = FirebaseDatabase.getInstance();
+    DatabaseReference myRef = database.getReference("Eggroll");
 
     @Override
     protected void onCreate(Bundle savedInstanceState){
@@ -52,6 +56,22 @@ public class MainActivity extends AppCompatActivity{
         eggroll.setVegetarian(false);
         eggroll.setRestaurant("Panda Express");
         eggroll.setImageId(R.drawable.eggroll);
+
+///////////////////////////////////////////////////////////////////
+        //myRef.setValue("Whats up");
+        //System.out.println(dataSnapshot.getValue(String.class));
+        myRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                System.out.println(dataSnapshot.getValue());
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+////////////////////////////////////////////////////////////////////////
 
         pass.setOnClickListener(new View.OnClickListener(){
             @Override
