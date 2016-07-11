@@ -1,12 +1,7 @@
 package com.example.proto.prototype_orange;
 
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
-import android.os.AsyncTask;
-import android.provider.MediaStore;
-import android.support.v4.view.GestureDetectorCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.MotionEvent;
@@ -15,10 +10,6 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.URL;
 import java.util.Random;
 import android.view.GestureDetector;
 import android.widget.Toast;
@@ -46,7 +37,7 @@ public class MainActivity extends AppCompatActivity{
     private GestureDetector gestureDetector;
     float xOffset;
     FirebaseDatabase database = FirebaseDatabase.getInstance();
-    DatabaseReference myRef = database.getReference("Eggroll");
+    DatabaseReference myRef = database.getReference("Egg Roll");
     StorageReference storageRef;
 
     @Override
@@ -62,13 +53,13 @@ public class MainActivity extends AppCompatActivity{
         gestureDetector = new GestureDetector(new GestureListener());
         xOffset = -1;
         eggroll = new Dish();
-        eggroll.setCuisine("Chinese");
-        eggroll.setPrice(4.99);
-        eggroll.setName("Egg Roll");
-        eggroll.setSpice(false);
-        eggroll.setVegetarian(false);
-        eggroll.setRestaurant("Panda Express");
-        eggroll.setImageId(R.drawable.eggroll);
+        //eggroll.setCuisine("Chinese");
+        //eggroll.setPrice(4.99);
+        //eggroll.setName("Egg Roll");
+        //eggroll.setSpice(false);
+        //eggroll.setVegetarian(false);
+        //eggroll.setRestaurant("Panda Express");
+        //eggroll.setImageId(R.drawable.eggroll);
 
         storageRef = FirebaseStorage.getInstance().getReferenceFromUrl("gs://happy-orange.appspot.com/");
 
@@ -76,7 +67,7 @@ public class MainActivity extends AppCompatActivity{
         myRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                System.out.println(dataSnapshot.getValue());
+                System.out.println(dataSnapshot.child("Cuisine").getValue());
             }
 
             @Override
@@ -121,20 +112,19 @@ public class MainActivity extends AppCompatActivity{
 
         go.setOnClickListener(new View.OnClickListener(){
             public void onClick(View v){
-                //if(dishName.getText() == "Egg Roll") {
-                    Intent intent = new Intent(MainActivity.this, MapsActivity.class);
-                    startActivity(intent);
-                //}
+            Intent intent = new Intent(MainActivity.this, MapsActivity.class);
+            startActivity(intent);
             }
         });
 
     }
 
     void passDish(){
+        myRef = database.getReference("Big Mac");
         Random rn = new Random();
         int prev;
 
-        System.out.println(current);
+        //System.out.println(current);
         do{
             prev = current;
             current = rn.nextInt(4);
@@ -151,46 +141,16 @@ public class MainActivity extends AppCompatActivity{
                 dishImage.setImageResource(R.drawable.curly_fries);
                 break;
             case 3: dishName.setText("Egg Roll");
-                //dishImage.setImageResource(R.drawable.eggroll);
-                //Bitmap bmp = BitmapFactory.decodeStream();
-                //dishImage.setImageBitmap(bmp);
                 storageRef.child("eggroll.jpg").getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>(){
 
                     @Override
                     public void onSuccess(Uri uri){
-                        System.out.println("Storage URI: " + uri);
-                        //URL url = new URL(uri);
-                        DownloadImageTask downloadImageTask = new DownloadImageTask();
+                        //System.out.println("Storage URI: " + uri);
+                        DownloadImageTask downloadImageTask = new DownloadImageTask(dishImage);
                         downloadImageTask.execute(uri);
-                        //uriToImage(uri);
                     }
                 });
                 break;
-        }
-    }
-
-    private class DownloadImageTask extends AsyncTask<Uri, Void, Void>{
-        Bitmap bmp;
-
-        @Override
-        protected Void doInBackground(Uri... params) {
-            try {
-                //InputStream imageStream = getContentResolver().openInputStream(uri);
-                URL url = new URL(params[0].toString());
-                System.out.println("Storage URL: " + url);
-                bmp = BitmapFactory.decodeStream(url.openConnection().getInputStream());
-                //Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), uri);
-            }catch(IOException e){
-                e.printStackTrace();
-            }
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(Void aVoid) {
-            super.onPostExecute(aVoid);
-            dishImage.setImageBitmap(bmp);
-            //dishImage.set
         }
     }
 
@@ -198,27 +158,14 @@ public class MainActivity extends AppCompatActivity{
 
         @Override
         public boolean onSingleTapUp(MotionEvent e) {
-            if(dishName.getText() == "Egg Roll") {
+            if(dishName.getText() == "Egg Roll" || dishName.getText() == "Big Mac") {
+                eggroll.setName("" + dishName.getText());
                 Intent intent = new Intent(MainActivity.this, DishInfo.class);
                 intent.putExtra("dish", eggroll);
                 startActivity(intent);
             }
-
             return true;
         }
-
-        @Override
-        public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
-            if(e1.getX() > e2.getX()){
-                Toast.makeText(getApplication().getBaseContext(), "Fling Left", Toast.LENGTH_SHORT).show();
-            }else if(e1.getX() < e2.getX()){
-                Toast.makeText(getApplication().getBaseContext(), "Fling Right", Toast.LENGTH_SHORT).show();
-            }else{
-                Toast.makeText(getApplication().getBaseContext(), "Fling meh", Toast.LENGTH_SHORT).show();
-            }
-            return true;
-        }
-
 
     }
 }
