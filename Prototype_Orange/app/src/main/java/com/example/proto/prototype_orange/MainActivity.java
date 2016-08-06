@@ -1,5 +1,7 @@
 package com.example.proto.prototype_orange;
 
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.net.Uri;
 import android.support.v4.widget.DrawerLayout;
@@ -56,6 +58,9 @@ public class MainActivity extends AppCompatActivity{
     private String[] myNavigationItems;
     private ActionBarDrawerToggle myDrawerToggle;
 
+    //Fragment manager variables
+    FragmentManager fragmentManager;
+
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
         boolean drawerOpen = myDrawer.isDrawerOpen(myListView);
@@ -107,6 +112,9 @@ public class MainActivity extends AppCompatActivity{
         gestureDetector = new GestureDetector(new GestureListener());
         xOffset = -1;
         eggroll = new Dish();
+
+        //Setup Fragment manager variables
+        fragmentManager = getFragmentManager();
 
         storageRef = FirebaseStorage.getInstance().getReferenceFromUrl("gs://happy-orange.appspot.com/");
 
@@ -210,9 +218,18 @@ public class MainActivity extends AppCompatActivity{
         public boolean onSingleTapUp(MotionEvent e) {
             if(dishName.getText() == "Egg Roll" || dishName.getText() == "Big Mac") {
                 eggroll.setName("" + dishName.getText());
-                Intent intent = new Intent(MainActivity.this, DishInfo.class);
-                intent.putExtra("dish", eggroll);
-                startActivity(intent);
+
+                //Intent intent = new Intent(MainActivity.this, DishInfo.class);
+                //intent.putExtra("dish", eggroll);
+                //startActivity(intent);
+                Bundle bundle = new Bundle();
+                bundle.putString("dish", "" + dishName.getText());
+                DishInfo dishInfo = new DishInfo();
+                dishInfo.setArguments(bundle);
+                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                fragmentTransaction.add(R.id.drawer_layout, dishInfo);
+                fragmentTransaction.addToBackStack(null);
+                fragmentTransaction.commit();
             }
             return true;
         }

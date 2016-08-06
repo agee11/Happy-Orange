@@ -1,9 +1,14 @@
 package com.example.proto.prototype_orange;
 
+import android.app.Fragment;
 import android.content.Intent;
 import android.net.Uri;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -16,35 +21,51 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
-public class DishInfo extends AppCompatActivity {
+public class DishInfo extends Fragment {
 
-    Dish dish;
+    String dish;
     FirebaseDatabase database = FirebaseDatabase.getInstance();
     DatabaseReference myRef;
     StorageReference storageRef;
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_dish_info);
-        Intent intent = getIntent();
-        dish = (Dish) intent.getSerializableExtra("dish");
 
+    public DishInfo(){}
+
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        //setContentView(R.layout.activity_dish_info);
+        //Intent intent = getIntent();
+        //dish = (Dish) getActivity().getIntent().getSerializableExtra("dish");
+
+        dish = getArguments().getString("dish");
         //Set Reference to point to correct location in database
-        myRef = database.getReference(dish.getName());
+        myRef = database.getReference(dish);
         storageRef = FirebaseStorage.getInstance().getReferenceFromUrl("gs://happy-orange.appspot.com/");
 
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        System.out.println("OnCreateView");
+        return inflater.inflate(R.layout.activity_dish_info, container, false);
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
         //Attach variables to views on screen
-        final TextView name = (TextView) findViewById(R.id.infoName);
-        final TextView price = (TextView) findViewById(R.id.infoPrice);
-        final TextView restaurant = (TextView) findViewById(R.id.infoRestaurant);
-        final TextView cuisine = (TextView) findViewById(R.id.infoCuisine);
-        final TextView spicy = (TextView) findViewById(R.id.infoSpice);
-        final TextView vegetarian = (TextView) findViewById(R.id.infoVegetarian);
-        final ImageView image = (ImageView) findViewById(R.id.infoImage);
+        final TextView name = (TextView) getView().findViewById(R.id.infoName);
+        final TextView price = (TextView) getView().findViewById(R.id.infoPrice);
+        final TextView restaurant = (TextView) getView().findViewById(R.id.infoRestaurant);
+        final TextView cuisine = (TextView) getView().findViewById(R.id.infoCuisine);
+        final TextView spicy = (TextView) getView().findViewById(R.id.infoSpice);
+        final TextView vegetarian = (TextView) getView().findViewById(R.id.infoVegetarian);
+        final ImageView image = (ImageView) getView().findViewById(R.id.infoImage);
 
         //Set variables to views on screen
-        name.setText(dish.getName());
+        name.setText(dish);
 
         myRef.addValueEventListener(new ValueEventListener() {
             @Override
@@ -74,4 +95,6 @@ public class DishInfo extends AppCompatActivity {
             }
         });
     }
+
+
 }
