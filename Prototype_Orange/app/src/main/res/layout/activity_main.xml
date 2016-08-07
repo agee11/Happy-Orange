@@ -6,66 +6,11 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <RelativeLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools"
-        android:id="@+id/content_layout"
-        android:layout_width="match_parent"
+    <fragment
+        android:name="com.example.proto.prototype_orange.HomeFragment"
+        android:id="@+id/content_fragment"
         android:layout_height="match_parent"
-        tools:context="com.example.proto.prototype_orange.MainActivity">
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Pass"
-            android:id="@+id/Pass"
-            android:layout_marginLeft="35dp"
-            android:layout_marginStart="35dp"
-            android:layout_marginBottom="124dp"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true" />
-
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Save"
-            android:id="@+id/Save"
-            android:layout_alignBottom="@+id/Pass"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentEnd="true"
-            android:layout_marginRight="29dp"
-            android:layout_marginEnd="29dp" />
-
-        <ImageView
-            android:layout_width="250dp"
-            android:layout_height="200dp"
-            android:id="@+id/dishImage"
-            android:layout_gravity="center"
-            android:src="@drawable/big_mac"
-            android:scaleType="fitXY"
-            android:layout_marginTop="26dp"
-            android:layout_below="@+id/dishName"
-            android:layout_centerHorizontal="true" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="Big Mac"
-            android:id="@+id/dishName"
-            android:layout_alignParentTop="true"
-            android:layout_centerHorizontal="true" />
-
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="GO!"
-            android:id="@+id/Go"
-            android:layout_alignParentBottom="true"
-            android:layout_centerHorizontal="true"
-            android:layout_marginBottom="42dp" />
-
-    </RelativeLayout>
+        android:layout_width="match_parent"/>
 
     <ListView
         android:id="@+id/left_drawer"
