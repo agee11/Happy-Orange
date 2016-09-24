@@ -112,7 +112,8 @@ public class MainActivity extends AppCompatActivity{
         switch(position){
             case 0: fragmentTransaction.replace(R.id.content_frame, new HomeFragment());
                     break;
-            case 2: fragmentTransaction.replace(R.id.content_frame, new FilterMenu());
+            case 2: fragmentManager.popBackStack("dishInfo", FragmentManager.POP_BACK_STACK_INCLUSIVE);
+                    fragmentTransaction.replace(R.id.content_frame, new FilterMenu());
                     break;
         }
         fragmentTransaction.commit();

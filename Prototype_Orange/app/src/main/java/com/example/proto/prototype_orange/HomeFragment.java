@@ -169,11 +169,6 @@ public class HomeFragment extends Fragment {
         @Override
         public boolean onSingleTapUp(MotionEvent e) {
             if(dishName.getText() == "Egg Roll" || dishName.getText() == "Big Mac") {
-                //eggroll.setName("" + dishName.getText());
-
-                //Intent intent = new Intent(MainActivity.this, DishInfo.class);
-                //intent.putExtra("dish", eggroll);
-                //startActivity(intent);
                 Bundle bundle = new Bundle();
                 bundle.putString("dish", "" + dishName.getText());
                 DishInfo dishInfo = new DishInfo();
@@ -184,8 +179,8 @@ public class HomeFragment extends Fragment {
 
 
                 FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                fragmentTransaction.add(R.id.drawer_layout, dishInfo);
-                fragmentTransaction.addToBackStack(null);
+                fragmentTransaction.add(R.id.content_frame, dishInfo);
+                fragmentTransaction.addToBackStack("dishInfo");
                 fragmentTransaction.commit();
             }
             return true;
