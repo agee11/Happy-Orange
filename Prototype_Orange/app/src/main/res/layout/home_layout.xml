@@ -43,7 +43,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="Big Mac"
+        android:text="Init"
         android:id="@+id/dishName"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
@@ -62,8 +62,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="Fragment Confirmation"
-        android:id="@+id/textView"
+        android:id="@+id/test"
         android:layout_above="@+id/Pass"
         android:layout_centerHorizontal="true" />
 

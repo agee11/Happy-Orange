@@ -3,7 +3,6 @@ package com.example.proto.prototype_orange;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
-import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -37,6 +36,7 @@ public class HomeFragment extends Fragment {
     float xPos;
     float xOffset;
     private GestureDetector gestureDetector;
+    Bundle savedState;
 
     //Fragment manager variables
     FragmentManager fragmentManager;
@@ -57,6 +57,11 @@ public class HomeFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         return inflater.inflate(R.layout.home_layout, container, false);
+    }
+
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
     }
 
     @Override
@@ -115,6 +120,13 @@ public class HomeFragment extends Fragment {
         });
     }
 
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putString("saveTest", "" + dishName.getText());
+        System.out.println("TEST TEST SAVED STATE TEST TEST");
+    }
+
     //Get next dish when user swipes left or taps on pass button
     void passDish(){
         myRef = database.getReference("Big Mac");
@@ -166,6 +178,11 @@ public class HomeFragment extends Fragment {
                 bundle.putString("dish", "" + dishName.getText());
                 DishInfo dishInfo = new DishInfo();
                 dishInfo.setArguments(bundle);
+
+
+                onSaveInstanceState(new Bundle());
+
+
                 FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
                 fragmentTransaction.add(R.id.drawer_layout, dishInfo);
                 fragmentTransaction.addToBackStack(null);

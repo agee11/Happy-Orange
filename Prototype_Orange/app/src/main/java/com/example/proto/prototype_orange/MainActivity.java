@@ -56,6 +56,12 @@ public class MainActivity extends AppCompatActivity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        fragmentManager = getFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.add(R.id.content_frame, new HomeFragment());
+        //fragmentTransaction.addToBackStack(null);
+        fragmentTransaction.commit();
+
         //drawer variables tied to layout
         myDrawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         myListView = (ListView) findViewById(R.id.left_drawer);
@@ -93,13 +99,24 @@ public class MainActivity extends AppCompatActivity{
 
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            myDrawer.closeDrawer(myListView);
             selectItem(position);
+            //System.out.println("Class: Item Selected: " + myNavigationItems[position]);
         }
     }
 
     //What to do when item is clicked
     private void selectItem(int position){
-        System.out.println(myNavigationItems[position]);
+        FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
+
+        switch(position){
+            case 0: fragmentTransaction.replace(R.id.content_frame, new HomeFragment());
+                    break;
+            case 2: fragmentTransaction.replace(R.id.content_frame, new FilterMenu());
+                    break;
+        }
+        fragmentTransaction.commit();
+        System.out.println("Method: Item Selected: " + myNavigationItems[position]);
     }
 
     @Override

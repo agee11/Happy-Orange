@@ -1,6 +1,7 @@
 package com.example.proto.prototype_orange;
 
 import android.app.Fragment;
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.support.annotation.Nullable;
@@ -30,7 +31,6 @@ public class DishInfo extends Fragment {
 
 
     public DishInfo(){}
-
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -95,6 +95,7 @@ public class DishInfo extends Fragment {
             }
         });
     }
+
 
 
 }

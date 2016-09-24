@@ -8,6 +8,20 @@
         <item>Favorites</item>
         <item>Filler</item>
     </string-array>
+    <string-array name="filter_options">
+        <item>Spicy</item>
+        <item>Vegetarian</item>
+        <item>Vegan</item>
+        <item>Italian</item>
+        <item>Chinese</item>
+        <item>Vietnamese</item>
+        <item>Indian</item>
+        <item>American</item>
+        <item>Mexican</item>
+        <item>Thai</item>
+        <item>Japanese</item>
+        <item>Seafood</item>
+    </string-array>
     <string name="drawer_open">Open navigation drawer</string>
     <string name="drawer_close">Close navigation drawer</string>
 
