@@ -16,9 +16,12 @@ public class DownloadImageTask extends AsyncTask<Uri, Void, Void> {
     Bitmap bmp;
     ImageView imageView;
 
+    //Constructor with ImageView as parameter
     DownloadImageTask(ImageView image){
         imageView = image;
     }
+
+    //Download from URL parameter and decode input stream into bitmap form
     @Override
     protected Void doInBackground(Uri... params) {
         try {
@@ -31,6 +34,7 @@ public class DownloadImageTask extends AsyncTask<Uri, Void, Void> {
         return null;
     }
 
+    //Set bitmap image downloaded from URL as the image for ImageView object
     @Override
     protected void onPostExecute(Void aVoid) {
         super.onPostExecute(aVoid);

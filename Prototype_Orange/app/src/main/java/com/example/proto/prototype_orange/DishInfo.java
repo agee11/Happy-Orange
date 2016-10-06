@@ -35,9 +35,6 @@ public class DishInfo extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //setContentView(R.layout.activity_dish_info);
-        //Intent intent = getIntent();
-        //dish = (Dish) getActivity().getIntent().getSerializableExtra("dish");
 
         dish = getArguments().getString("dish");
         //Set Reference to point to correct location in database
@@ -48,7 +45,6 @@ public class DishInfo extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        System.out.println("OnCreateView");
         return inflater.inflate(R.layout.activity_dish_info, container, false);
     }
 
@@ -65,12 +61,10 @@ public class DishInfo extends Fragment {
         final ImageView image = (ImageView) getView().findViewById(R.id.infoImage);
 
         //Set variables to views on screen
-        name.setText(dish);
-
         myRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                System.out.println(dataSnapshot.child("Cuisine").getValue());
+                name.setText("" + dataSnapshot.child("Name").getValue());
                 price.setText("$" + dataSnapshot.child("Price").getValue());
                 restaurant.setText("" + dataSnapshot.child("Restaurant").getValue());
                 cuisine.setText("" + dataSnapshot.child("Cuisine").getValue());
@@ -85,8 +79,6 @@ public class DishInfo extends Fragment {
                         downloadImageTask.execute(uri);
                     }
                 });
-                //image.setImageResource(dish.getImageId());
-
             }
 
             @Override

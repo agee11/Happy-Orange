@@ -87,7 +87,7 @@ public class MainActivity extends AppCompatActivity{
         //Set the drawer toggle as the listener
         myDrawer.setDrawerListener(myDrawerToggle);
 
-        // enable ActionBar app icon to behave as action to toggle nav drawer
+        //Enable ActionBar app icon to behave as toggle nav drawer
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().show();
@@ -95,17 +95,18 @@ public class MainActivity extends AppCompatActivity{
     }
 
     //Class to listen to item clicks in drawer
+    //Close drawer when item is clicked
     private class DrawerItemClickListener implements ListView.OnItemClickListener{
 
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
             myDrawer.closeDrawer(myListView);
             selectItem(position);
-            //System.out.println("Class: Item Selected: " + myNavigationItems[position]);
         }
     }
 
-    //What to do when item is clicked
+    //What to do when drawer item is clicked
+    //Replace current content frame fragment with the one selected
     private void selectItem(int position){
         FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
 
@@ -117,7 +118,7 @@ public class MainActivity extends AppCompatActivity{
                     break;
         }
         fragmentTransaction.commit();
-        System.out.println("Method: Item Selected: " + myNavigationItems[position]);
+
     }
 
     @Override

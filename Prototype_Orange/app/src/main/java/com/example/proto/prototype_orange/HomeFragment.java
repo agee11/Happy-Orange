@@ -7,20 +7,26 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.GestureDetector;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
+import java.util.ArrayList;
 import java.util.Random;
 
 /**
@@ -42,7 +48,7 @@ public class HomeFragment extends Fragment {
     FragmentManager fragmentManager;
 
     FirebaseDatabase database = FirebaseDatabase.getInstance();
-    DatabaseReference myRef = database.getReference("Egg Roll");
+    DatabaseReference myRef;
     StorageReference storageRef;
 
     public HomeFragment() {
@@ -83,7 +89,7 @@ public class HomeFragment extends Fragment {
         pass.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
-                passDish();
+                getDish();
                 //System.out.println(rn);
             }
         });
@@ -100,7 +106,7 @@ public class HomeFragment extends Fragment {
 
                 if(event.getAction() == MotionEvent.ACTION_UP){
                     if((dishImage.getWidth()/2 + dishImage.getX()) <= 0){
-                        passDish();
+                        getDish();
                         System.out.println("Pass on Swipe");
                     }
                     dishImage.setX(xPos);
@@ -120,47 +126,36 @@ public class HomeFragment extends Fragment {
         });
     }
 
-    @Override
-    public void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        outState.putString("saveTest", "" + dishName.getText());
-        System.out.println("TEST TEST SAVED STATE TEST TEST");
-    }
-
     //Get next dish when user swipes left or taps on pass button
-    void passDish(){
-        myRef = database.getReference("Big Mac");
+    void getDish(){
+
         Random rn = new Random();
         int prev;
 
-        //System.out.println(current);
         do{
             prev = current;
-            current = rn.nextInt(4);
+            current = rn.nextInt(23);
         }while(current == prev);
 
-        switch(current) {
-            case 0: dishName.setText("Cheese Cake");
-                dishImage.setImageResource(R.drawable.cheesecake);
-                break;
-            case 1: dishName.setText("Big Mac");
-                dishImage.setImageResource(R.drawable.big_mac);
-                break;
-            case 2: dishName.setText("Curly Fries");
-                dishImage.setImageResource(R.drawable.curly_fries);
-                break;
-            case 3: dishName.setText("Egg Roll");
-                storageRef.child("eggroll.jpg").getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>(){
-
+        myRef = database.getReference("" + current);
+        myRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                dishName.setText("" + dataSnapshot.child("Name").getValue());
+                storageRef.child("" + dataSnapshot.child("Image").getValue()).getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>(){
                     @Override
                     public void onSuccess(Uri uri){
-                        //System.out.println("Storage URI: " + uri);
                         DownloadImageTask downloadImageTask = new DownloadImageTask(dishImage);
                         downloadImageTask.execute(uri);
                     }
                 });
-                break;
-        }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
     }
 
     //Listens for tap on dish image
@@ -168,21 +163,15 @@ public class HomeFragment extends Fragment {
 
         @Override
         public boolean onSingleTapUp(MotionEvent e) {
-            if(dishName.getText() == "Egg Roll" || dishName.getText() == "Big Mac") {
-                Bundle bundle = new Bundle();
-                bundle.putString("dish", "" + dishName.getText());
-                DishInfo dishInfo = new DishInfo();
-                dishInfo.setArguments(bundle);
+            Bundle bundle = new Bundle();
+            bundle.putString("dish", "" + current);
+            DishInfo dishInfo = new DishInfo();
+            dishInfo.setArguments(bundle);
 
-
-                onSaveInstanceState(new Bundle());
-
-
-                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                fragmentTransaction.add(R.id.content_frame, dishInfo);
-                fragmentTransaction.addToBackStack("dishInfo");
-                fragmentTransaction.commit();
-            }
+            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+            fragmentTransaction.add(R.id.content_frame, dishInfo);
+            fragmentTransaction.addToBackStack("dishInfo");
+            fragmentTransaction.commit();
             return true;
         }
 
