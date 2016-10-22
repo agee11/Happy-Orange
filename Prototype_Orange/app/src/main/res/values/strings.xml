@@ -10,8 +10,6 @@
     </string-array>
     <string-array name="filter_options">
         <item>Spicy</item>
-        <item>Vegetarian</item>
-        <item>Vegan</item>
         <item>Italian</item>
         <item>Chinese</item>
         <item>Vietnamese</item>
@@ -20,11 +18,15 @@
         <item>Mexican</item>
         <item>Thai</item>
         <item>Japanese</item>
+        <item>Greek</item>
         <item>Seafood</item>
-        <item>Breakfast</item>
-        <item>Lunch</item>
-        <item>Dinner</item>
+        <item>Breakfast Food</item>
     </string-array>
+    <string-array name="diet_options">
+        <item>Vegetarian</item>
+        <item>Vegan</item>
+    </string-array>
+
     <string name="drawer_open">Open navigation drawer</string>
     <string name="drawer_close">Close navigation drawer</string>
 

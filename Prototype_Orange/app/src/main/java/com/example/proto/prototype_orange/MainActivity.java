@@ -1,5 +1,6 @@
 package com.example.proto.prototype_orange;
 
+import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Intent;
@@ -58,7 +59,7 @@ public class MainActivity extends AppCompatActivity{
 
         fragmentManager = getFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.add(R.id.content_frame, new HomeFragment());
+        fragmentTransaction.add(R.id.content_frame, new HomeFragment(), "homeFragment");
         //fragmentTransaction.addToBackStack(null);
         fragmentTransaction.commit();
 
@@ -109,10 +110,16 @@ public class MainActivity extends AppCompatActivity{
     //Replace current content frame fragment with the one selected
     private void selectItem(int position){
         FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
-
+        Fragment current;
         switch(position){
-            case 0: fragmentTransaction.replace(R.id.content_frame, new HomeFragment());
+            //Replace current fragment with HomeFragment if current fragment is not already HomeFragment.
+            //Otherwise do nothing
+            case 0: current = getFragmentManager().findFragmentByTag("homeFragment");
+                    if(current == null){
+                        fragmentTransaction.replace(R.id.content_frame, new HomeFragment(), "homeFragment");
+                    }
                     break;
+            //Replace current fragment with FilterMenu
             case 2: fragmentManager.popBackStack("dishInfo", FragmentManager.POP_BACK_STACK_INCLUSIVE);
                     fragmentTransaction.replace(R.id.content_frame, new FilterMenu());
                     break;

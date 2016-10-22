@@ -3,6 +3,8 @@ package com.example.proto.prototype_orange;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -26,8 +28,12 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Hashtable;
+import java.util.List;
 import java.util.Random;
+import java.util.Stack;
 
 /**
  * Created by Andrew on 8/6/2016.
@@ -36,6 +42,7 @@ public class HomeFragment extends Fragment {
     private Button pass, save, go;
     private TextView dishName;
     private ImageView dishImage;
+    private boolean filterConflict;
 
     int current;
     int[] position;
@@ -127,22 +134,59 @@ public class HomeFragment extends Fragment {
     }
 
     //Get next dish when user swipes left or taps on pass button
-    void getDish(){
+    private void getDish(){
+        myRef = database.getReference();
 
-        Random rn = new Random();
-        int prev;
-
-        do{
-            prev = current;
-            current = rn.nextInt(23);
-        }while(current == prev);
-
-        myRef = database.getReference("" + current);
         myRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                dishName.setText("" + dataSnapshot.child("Name").getValue());
-                storageRef.child("" + dataSnapshot.child("Image").getValue()).getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>(){
+                Random rn = new Random();
+                Stack<Integer> prev = new Stack<Integer>();
+                String[] filterItems;
+                SharedPreferences preferences = getActivity().getSharedPreferences("com.example.proto.prototype_orange", Context.MODE_PRIVATE);
+                boolean dietConflict, mealConflict;
+
+                do {
+                    prev.push(current);
+                    PREV:
+                    for (int i:prev) {
+                        if(current == i){
+                            current = rn.nextInt(23);
+                            break PREV;
+                        }
+                    }
+
+                    //Check if food fits user filter settings
+                    filterItems = getResources().getStringArray(R.array.filter_options);
+                    filterConflict = true;
+                    for (String s: filterItems) {
+                        //System.out.println("FILTER " + s + ": " + preferences.getBoolean(s, false));
+                        //System.out.println("FILTER " + s + ": " + (boolean) dataSnapshot.child("" + current).child(s).getValue());
+                        if((preferences.getBoolean(s, false) == true) && ((boolean)dataSnapshot.child("" + current).child(s).getValue() == true)) {
+                            filterConflict = false;
+                            break;
+                        }
+                    }
+
+                    //Check if food fits user diet restrictions
+                    filterItems = getResources().getStringArray(R.array.diet_options);
+                    dietConflict = false;
+                    for (String s: filterItems) {
+                        //System.out.println("FILTER " + s + ": " + preferences.getBoolean(s, false));
+                        //System.out.println("FILTER " + s + ": " + (boolean) dataSnapshot.child("" + current).child(s).getValue());
+                        if((preferences.getBoolean(s, false) == true) && ((boolean)dataSnapshot.child("" + current).child(s).getValue() == false)) {
+                            dietConflict = true;
+                            break;
+                        }
+
+                    }
+                    //System.out.println("Diet " + dietConflict);
+                    System.out.println("Filter " + filterConflict);
+                    System.out.println("Diet " + dietConflict);
+                }while(dietConflict || filterConflict);
+
+                dishName.setText("" + dataSnapshot.child("" + current).child("Name").getValue());
+                storageRef.child("" + dataSnapshot.child("" + current).child("Image").getValue()).getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>(){
                     @Override
                     public void onSuccess(Uri uri){
                         DownloadImageTask downloadImageTask = new DownloadImageTask(dishImage);
@@ -158,6 +202,32 @@ public class HomeFragment extends Fragment {
         });
     }
 
+    private void checkFilter(DatabaseReference ref){
+
+        ref.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+
+                String[] filterItems = getResources().getStringArray(R.array.filter_options);
+                SharedPreferences preferences = getActivity().getSharedPreferences("com.example.proto.prototype_orange", Context.MODE_PRIVATE);
+
+                filterConflict = false;
+                for (String s: filterItems) {
+                    System.out.println("FILTER " + s + ": " + preferences.getBoolean(s, false));
+                    System.out.println("FILTER " + s + ": " + (boolean) dataSnapshot.child(s).getValue());
+                    if((preferences.getBoolean(s, false) == true) && ((boolean)dataSnapshot.child(s).getValue() == false)) {
+                        filterConflict = true;
+                        break;
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+    }
     //Listens for tap on dish image
     private class GestureListener extends GestureDetector.SimpleOnGestureListener {
 

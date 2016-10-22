@@ -5,11 +5,17 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.content.res.TypedArrayUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RadioGroup;
 import android.widget.Switch;
+
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 
 public class FilterMenu extends Fragment {
@@ -21,7 +27,6 @@ public class FilterMenu extends Fragment {
     public FilterMenu() {
         // Required empty public constructor
     }
-
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -50,7 +55,15 @@ public class FilterMenu extends Fragment {
             switchView.setSwitchPadding(70);
             switchView.setChecked(sharedPrefs.getBoolean(s, false));
             radioGroup.addView(switchView);
-
+        }
+        filterItems = getResources().getStringArray(R.array.diet_options);
+        for (String s: filterItems) {
+            Switch switchView = new Switch(this.getActivity());
+            switchView.setText(s);
+            switchView.setMinWidth(600);
+            switchView.setSwitchPadding(70);
+            switchView.setChecked(sharedPrefs.getBoolean(s, false));
+            radioGroup.addView(switchView);
         }
     }
 
@@ -63,16 +76,27 @@ public class FilterMenu extends Fragment {
     public void onPause() {
         super.onPause();
         View s;
+        filterItems = getResources().getStringArray(R.array.filter_options);
+        String[] test = getResources().getStringArray(R.array.filter_options);
+        String[] test2 = getResources().getStringArray(R.array.diet_options);
+
+        ArrayList<String> filterList = new ArrayList<String>();
+        List<String> filter = Arrays.asList(test);
+        filterList.addAll(filter);
+        filter = Arrays.asList(test2);
+        filterList.addAll(filter);
+
         for(int i = 0; i < radioGroup.getChildCount(); i++){
             s = radioGroup.getChildAt(i);
+
             if (s instanceof Switch){
                 if(((Switch) s).isChecked() == true){
                     SharedPreferences.Editor editor = getActivity().getSharedPreferences("com.example.proto.prototype_orange", Context.MODE_PRIVATE).edit();
-                    editor.putBoolean(filterItems[i],true);
+                    editor.putBoolean(filterList.get(i),true);
                     editor.commit();
                 }else{
                     SharedPreferences.Editor editor = getActivity().getSharedPreferences("com.example.proto.prototype_orange", Context.MODE_PRIVATE).edit();
-                    editor.putBoolean(filterItems[i],false);
+                    editor.putBoolean(filterList.get(i),false);
                     editor.commit();
                 }
             }
