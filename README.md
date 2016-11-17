@@ -1,8 +1,11 @@
 # Happy-Orange
 
 Swipe pictures to the left to get new dish.
+
 Tap on 'Pass' button to get new dish.
+
 Tap on dish image to view details.
+
 Tap on menu button to access filter.
 
 Known Issues:
