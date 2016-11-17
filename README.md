@@ -1,5 +1,19 @@
 # Happy-Orange
 
+Swipe pictures to the left to get new dish.
+Tap on 'Pass' button to get new dish.
+Tap on dish image to view details.
+Tap on menu button to access filter.
+
+Known Issues:
+
+Searching for dishes with both Vegetarian and Vegan filters on will crash app.
+
+Initial image of dish search is always a Big Mac with the label init.
+
+A visible delay when app is downloading new dish image.
+
+
 Prerequisites: 
 
 Install Android Studio.
